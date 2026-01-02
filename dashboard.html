@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>Dashboard 🏠</h1>
+  <button onclick="logout()">Logout</button>
+
+  <hr />
+
+  <h2>Add Expense</h2>
+  <input id="title" placeholder="Title" />
+  <input id="amount" type="number" placeholder="Amount" />
+  <input id="category" placeholder="Category" />
+  <input id="date" type="date" />
+  <button onclick="addExpense()">Add Expense</button>
+
+  <hr />
+
+  <h2>Your Expenses</h2>
+  <ul id="expenseList"></ul>
+
+  <script>
+    const API = "http://localhost:5000/api/expenses";
+    const token = localStorage.getItem("token");
+
+    // 🔒 Protect dashboard
+    if (!token) {
+      window.location.href = "index.html";
+    }
+
+    // LOAD EXPENSES
+    async function loadExpenses() {
+      const res = await fetch(API, {
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
+      const data = await res.json();
+
+      const list = document.getElementById("expenseList");
+      list.innerHTML = "";
+
+      data.forEach(exp => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${exp.title} - ₹${exp.amount} (${exp.category})
+          <button onclick="deleteExpense('${exp._id}')">❌</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    // ADD EXPENSE
+    async function addExpense() {
+      const title = document.getElementById("title").value;
+      const amount = document.getElementById("amount").value;
+      const category = document.getElementById("category").value;
+      const date = document.getElementById("date").value;
+
+      await fetch(API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({ title, amount, category, date })
+      });
+
+      loadExpenses();
+    }
+
+    // DELETE EXPENSE
+    async function deleteExpense(id) {
+      await fetch(`${API}/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
+      loadExpenses();
+    }
+
+    // LOGOUT
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    }
+
+    loadExpenses();
+  </script>
+
+</body>
+</html>
+
+
