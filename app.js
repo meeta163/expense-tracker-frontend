@@ -1,6 +1,6 @@
 const API_URL = "https://expense-tracker-backend.onrender.com";
+const API_AUTH = `${API_URL}/api/auth`;
 const API_EXPENSE = `${API_URL}/api/expenses`;
-
 
 // REGISTER
 async function registerUser() {
@@ -40,7 +40,7 @@ async function loginUser() {
 
     if (data.token) {
       localStorage.setItem("token", data.token);
-      window.location.href = "dashboard.html"; // ✅ REDIRECT
+      window.location.href = "dashboard.html";
     } else {
       alert("Invalid login ❌");
     }
@@ -50,5 +50,6 @@ async function loginUser() {
     console.error(err);
   }
 }
+
 
 
