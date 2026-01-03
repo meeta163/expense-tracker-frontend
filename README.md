@@ -24,8 +24,7 @@ style.css         – Styling
 
 ## How to Run Locally
 1. Clone the repository:
-git clone https://github.com/<meeta163>/expense-tracker-frontend.git
-
+git clone https://github.com/meeta163/expense-tracker-frontend.git
 
 
 2. Open the project folder.
@@ -50,6 +49,7 @@ http://localhost:5000
 
 ## Author
 Meeta Panjwani
+
 
 
 
